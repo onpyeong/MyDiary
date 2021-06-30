@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "diary_data")
 data class DiaryData(
     @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    var id: Int?,
     @ColumnInfo(name = "title")
     var title: String,
     @ColumnInfo(name = "content")

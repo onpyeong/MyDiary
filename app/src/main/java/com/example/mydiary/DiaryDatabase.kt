@@ -12,7 +12,7 @@ abstract class DiaryDatabase: RoomDatabase() {
     companion object {
         private var singleDiaryDatabase: DiaryDatabase? = null
 
-        // 싱글턴 패턴
+        // 싱글턴 패턴, 무거움
         fun getInstance(context: Context): DiaryDatabase? {
             if(singleDiaryDatabase == null) {
                 synchronized(DiaryDatabase::class) { // 여러 스레드가 접근 못하도록
