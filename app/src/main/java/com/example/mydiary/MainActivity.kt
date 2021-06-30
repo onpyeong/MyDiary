@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.mydiary.databinding.ActivityMainBinding
 import com.example.mydiary.databinding.ItemDiaryBinding
 
@@ -20,14 +21,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //val swipeHelperCallback = SwipeHelperCallback()
+        //val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         val intent = Intent(this, AddActivity::class.java)
 
         diaryAdapter = DiaryAdapter()
         binding.rvDiaryList.adapter = diaryAdapter
-        //데이터 추가
-        //diaryAdapter.diaryList.addAll(listOf<DiaryData>(DiaryData(0, "s", "s")))
+
+        // itemTouchHelper와 recyclerView 연결
+        //itemTouchHelper.attachToRecyclerView(binding.rvDiaryList)
+
+        // adapter 내부의 함수에 현재 로직을 넘김
+        // callback 구현
+        diaryAdapter.setDeleteButtonClickListener {
+                it ->
+            diaryViewModel.delete(it)
+            Log.d("delete", "db")
+        }
 
         // ViewModel 객체 생성 -> 인스턴스가 이미 있다면 이를 반환하여 메모리 낭비를 줄임
         diaryViewModel = ViewModelProvider(this).get(DiaryViewModel::class.java)
@@ -37,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             it ->
             //update UI
             // observer 내부 onChanged 메소드에서 관찰하던 LiveData가 변하면 무엇을 할 것인지 액션 지정
-            diaryAdapter.diaryList.addAll(it)
+            diaryAdapter.diaryList = it as MutableList<DiaryData>
             diaryAdapter.notifyDataSetChanged()
         })
 
